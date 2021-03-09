@@ -49,7 +49,8 @@ export default {
             db.collection("classes").doc(id).delete();
         },
         isNotInConfig() {
-            return 1 !== 1;
+            //true if admin mode
+            return false;
         }
     },
     firestore: {
