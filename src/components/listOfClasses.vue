@@ -50,7 +50,7 @@ export default {
         },
         isNotInConfig() {
             //true if admin mode
-            return true;
+            return false;
         }
     },
     firestore: {
