@@ -11,7 +11,6 @@ import 'firebase/firestore';
     messagingSenderId: "40077750048",
     appId: "1:40077750048:web:6a489894a7b4582dc57145"
   };
-
   // Initialize Firebase
   export const db = firebase.initializeApp(firebaseConfig).firestore();
   export const increment = firebase.firestore.FieldValue.increment(1);

@@ -13,7 +13,7 @@ new Vue({
   data() {
     return {
       myStyle: {
-        backgroundColor: "#05d"
+        backgroundColor: '#2d2d2d',
       }
     };
   },

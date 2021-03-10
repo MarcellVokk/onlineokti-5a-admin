@@ -1,5 +1,5 @@
 <template>
-    <div class="pt-3">
+    <div class="pt-3 frhurehgtr">
         <div v-if="isNotInConfig()">
             <v-row class="d-flex justify-center">
                 <v-col cols="10">
@@ -32,7 +32,8 @@
                     </v-col>
                 </v-row>
                 <div class="clicks">{{ room.clicks }}</div>
-                <div class="nextUpcoming" v-if="room.active === 'true'">MOST</div>
+                <div class="nextUpcoming" v-if="room.active === 'true' && !isNotInConfig()">MOST</div>
+                <div class="nextUpcomingAdminMode" v-if="room.active === 'true' && isNotInConfig()">MOST</div>
                 <div class="invis-small">-</div>
             </v-card>
         </transition-group>
@@ -90,6 +91,14 @@ export default {
     color: rgb(105, 105, 105);
 };
 
+.frhurehgtr {
+    width: 100%;
+}
+
+.big-invis {
+    height: 2000px;
+}
+
 .icobtn {
     left: -260px;
     background-color: rgb(54, 54, 54);
@@ -116,7 +125,24 @@ export default {
     color: rgb(255, 255, 255);
     position: relative;
     left: 0%;
-    top: -128px;
+    top: -54px;
+    padding-left: 10px center;
+    border: #fff;
+    background-color: rgba(224, 31, 31, 0.911);
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+    text-align: center;
+    max-width: 60px;
+    box-shadow: 0px 0px 12px rgb(29, 29, 29);
+}
+
+.nextUpcomingAdminMode {
+    color: rgb(255, 255, 255);
+    position: relative;
+    left: 0%;
+    top: -95px;
     padding-left: 10px center;
     border: #fff;
     background-color: rgba(224, 31, 31, 0.911);
