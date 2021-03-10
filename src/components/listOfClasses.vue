@@ -26,7 +26,7 @@
                         <v-btn color="green" @click="analyticsLog(room.id, room.link)">Belépés</v-btn>
                         <v-btn color="primary" v-if="isNotInConfig() && room.active === 'false'" @click="setActive(room.id, 'true')">aktiválás</v-btn>
                         <v-btn color="primary" v-if="isNotInConfig() && room.active === 'true'" @click="setActive(room.id, 'false')">deaktivál</v-btn>
-                        <v-btn icon color="red" class="icobtn" v-if="isNotInConfig()">
+                        <v-btn icon color="red" class="icobtn" v-if="isNotInConfig()" @click="deleteRoom(room.id)">
                             <v-icon>mdi-delete</v-icon>
                         </v-btn>
                     </v-col>
@@ -55,7 +55,7 @@ export default {
     methods: {
         async addItem() {
             if(this.newItem) {
-                await db.collection("classes").add({ name: this.newItem, link: this.newLink, time: this.newTimestamp, serial: this.newSerial, clicks: 0, active: 'false' });
+                db.collection('classes').add({ name: this.newItem, link: this.newLink, time: this.newTimestamp, serial: this.newSerial, clicks: 0, active: 'false' });
                 this.newItem = "";
                 this.newLink = "";
                 this.newTimestamp = "";
@@ -80,8 +80,8 @@ export default {
         }
     },
     firestore: {
-        rooms: db.collection("classes").orderBy('serial', 'asc')
-    }
+        rooms: db.collection('classes').orderBy('serial', 'asc'),
+    },
 }
 </script>
 
