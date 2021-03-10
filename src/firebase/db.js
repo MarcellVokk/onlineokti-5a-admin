@@ -13,3 +13,4 @@ import 'firebase/firestore';
   };
   // Initialize Firebase
   export const db = firebase.initializeApp(firebaseConfig).firestore();
+  export const increment = firebase.firestore.FieldValue.increment(1);
