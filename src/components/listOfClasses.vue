@@ -98,7 +98,7 @@ export default {
         },
         async reactLike(id, likes, idReal) {
 
-            if(likes < 100 &&) {
+            if(likes < 100) {
                 const ref = db.collection(deffaultCollection).doc(id);
                 await ref.update({ likes: increment });
             }
