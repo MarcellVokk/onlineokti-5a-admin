@@ -33,7 +33,7 @@
                 </v-row>
                 <div class="clicks">{{ room.clicks }}</div>
 
-                <div class="reactEmoji" :class="{ liked: liked }" @click="reactLike(room.id, room.likes)" v-if="!isNotInConfig()">
+                <div class="reactEmoji" id="room.name" @click="reactLike(room.id, room.likes, room.name)" v-if="!isNotInConfig()">
                     <v-icon class="reactEmojiEmoji" small color="blue">{{likedStyling}}</v-icon>
                     <div class="reactEmojiCounter">{{ room.likes }}</div>
                 </div>
@@ -96,13 +96,18 @@ export default {
             const ref = db.collection(deffaultCollection).doc(id);
             await ref.update({ active: active });
         },
-        async reactLike(id, likes) {
+        async reactLike(id, likes, idReal) {
 
-            if(likes < 100 && !this.liked) {
-                this.liked = true;
-                this.likedStyling = "mdi-thumb-up"
+            if(likes < 100 &&) {
                 const ref = db.collection(deffaultCollection).doc(id);
                 await ref.update({ likes: increment });
+            }
+            var btn = document.getElementById(idReal);
+            if(btn.classList.contains("liked)) {
+                btn.classList.remove("liked");
+            }
+            else {
+                btn.classList.add("liked");
             }
         }
     },
