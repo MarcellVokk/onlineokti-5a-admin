@@ -90,7 +90,7 @@ export default {
         },
         isNotInConfig() {
             //true if admin mode
-            return false;
+            return true;
         },
         async setActive(id, active) {
             const ref = db.collection(deffaultCollection).doc(id);
