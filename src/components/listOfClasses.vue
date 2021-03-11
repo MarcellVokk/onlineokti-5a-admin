@@ -56,7 +56,7 @@ export default {
     methods: {
         async addItem() {
             if(this.newItem) {
-                db.collection('classes').add({ name: this.newItem, link: this.newLink, time: this.newTimestamp, serial: this.newSerial, clicks: 0, active: 'false' });
+                db.collection('5a-classes').add({ name: this.newItem, link: this.newLink, time: this.newTimestamp, serial: this.newSerial, clicks: 0, active: 'false' });
                 this.newItem = "";
                 this.newLink = "";
                 this.newTimestamp = "";
@@ -65,23 +65,23 @@ export default {
         },
         async analyticsLog(id, link) {
             open(link);
-            const ref = db.collection('classes').doc(id);
+            const ref = db.collection('5a-classes').doc(id);
             ref.update({ clicks: increment });
         },
         deleteRoom(id) {
-            db.collection("classes").doc(id).delete();
+            db.collection("5a-classes").doc(id).delete();
         },
         isNotInConfig() {
             //true if admin mode
-            return true;
+            return false;
         },
         setActive(id, active) {
-            const ref = db.collection('classes').doc(id);
+            const ref = db.collection('5a-classes').doc(id);
             ref.update({ active: active });
         }
     },
     firestore: {
-        rooms: db.collection('classes').orderBy('serial', 'asc'),
+        rooms: db.collection('5a-classes').orderBy('serial', 'asc'),
     },
 }
 </script>
