@@ -103,7 +103,7 @@ export default {
                 await ref.update({ likes: increment });
             }
             var btn = document.getElementById(idReal);
-            if(btn.classList.contains("liked)) {
+            if(btn.classList.contains("liked")) {
                 btn.classList.remove("liked");
             }
             else {
