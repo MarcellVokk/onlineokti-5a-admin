@@ -24,17 +24,29 @@
                         <v-list-item-subtitle class="sub">{{ room.time }}</v-list-item-subtitle>
                         <div class="invis">-</div>
                         <v-btn color="green" @click="analyticsLog(room.id, room.link)">Belépés</v-btn>
-                        <v-btn color="primary" v-if="isNotInConfig() && room.active === 'false'" @click="setActive(room.id, 'true')">aktiválás</v-btn>
-                        <v-btn color="primary" v-if="isNotInConfig() && room.active === 'true'" @click="setActive(room.id, 'false')">deaktivál</v-btn>
+                        <v-btn color="primary" v-show="isNotInConfig() && room.active === 'false'" @click="setActive(room.id, 'true')">aktiválás</v-btn>
+                        <v-btn color="primary" v-show="isNotInConfig() && room.active === 'true'" @click="setActive(room.id, 'false')">deaktivál</v-btn>
                         <v-btn icon color="red" class="icobtn" v-if="isNotInConfig()" @click="deleteRoom(room.id)">
                             <v-icon>mdi-delete</v-icon>
                         </v-btn>
                     </v-col>
                 </v-row>
                 <div class="clicks">{{ room.clicks }}</div>
-                <div class="nextUpcoming" v-if="room.active === 'true' && !isNotInConfig()">MOST</div>
-                <div class="nextUpcomingAdminMode" v-if="room.active === 'true' && isNotInConfig()">MOST</div>
-                <div class="invis-small">-</div>
+
+                <div class="reactEmoji" @click="reactLike(room.id, room.likes)" v-if="!isNotInConfig()">
+                    <v-icon class="reactEmojiEmoji" small color="blue">mdi-thumb-up</v-icon>
+                    <div class="reactEmojiCounter">{{ room.likes }}</div>
+                </div>
+
+                <div class="reactEmojiAdmin" @click="reactLike(room.id, room.likes)" v-if="isNotInConfig()">
+                    <v-icon class="reactEmojiEmoji" small color="blue">mdi-thumb-up</v-icon>
+                    <div class="reactEmojiCounter">{{ room.likes }}</div>
+                </div>
+
+                <div class="nextUpcoming" v-if="room.active === 'true'">
+                    <v-icon small color="#de1414">mdi-alarm-bell</v-icon>
+                </div>
+                <div class="invis-small"></div>
             </v-card>
         </transition-group>
     </div>
@@ -43,6 +55,9 @@
 <script>
 import { db } from '../firebase/db'
 import { increment } from '../firebase/db'
+
+var deffaultCollection = "classes" //the working collection
+
 export default {
     data() {
         return {
@@ -56,7 +71,7 @@ export default {
     methods: {
         async addItem() {
             if(this.newItem) {
-                db.collection('5a-classes').add({ name: this.newItem, link: this.newLink, time: this.newTimestamp, serial: this.newSerial, clicks: 0, active: 'false' });
+                db.collection(deffaultCollection).add({ name: this.newItem, link: this.newLink, time: this.newTimestamp, serial: this.newSerial, clicks: 0, active: 'false', likes: 0 });
                 this.newItem = "";
                 this.newLink = "";
                 this.newTimestamp = "";
@@ -65,23 +80,29 @@ export default {
         },
         async analyticsLog(id, link) {
             open(link);
-            const ref = db.collection('5a-classes').doc(id);
+            const ref = db.collection(deffaultCollection).doc(id);
             ref.update({ clicks: increment });
         },
-        deleteRoom(id) {
-            db.collection("5a-classes").doc(id).delete();
+        async deleteRoom(id) {
+            await db.collection(deffaultCollection).doc(id).delete();
         },
         isNotInConfig() {
             //true if admin mode
-            return true;
+            return false;
         },
-        setActive(id, active) {
-            const ref = db.collection('5a-classes').doc(id);
-            ref.update({ active: active });
+        async setActive(id, active) {
+            const ref = db.collection(deffaultCollection).doc(id);
+            await ref.update({ active: active });
+        },
+        async reactLike(id, likes) {
+            if(likes < 100) {
+                const ref = db.collection(deffaultCollection).doc(id);
+                await ref.update({ likes: increment });
+            }
         }
     },
     firestore: {
-        rooms: db.collection('5a-classes').orderBy('serial', 'asc'),
+        rooms: db.collection(deffaultCollection).orderBy('serial', 'desc'),
     },
 }
 </script>
@@ -112,31 +133,31 @@ export default {
     padding-left: 10px center;
     border: #fff;
     background-color: rgb(59, 59, 59);
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    border-top-right-radius: 10px;
+    border-top-left-radius: 40px;
+    border-bottom-left-radius: 40px;
+    border-bottom-right-radius: 40px;
+    border-top-right-radius: 40px;
     text-align: center;
     max-width: 40px;
     box-shadow: 0px 0px 12px rgb(29, 29, 29);
-}
+};
 
 .nextUpcoming {
     color: rgb(255, 255, 255);
     position: relative;
     left: 0%;
-    top: -54px;
+    top: -146px;
     padding-left: 10px center;
     border: #fff;
-    background-color: rgba(224, 31, 31, 0.911);
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    border-top-right-radius: 10px;
+    background-color: rgba(224, 31, 31, 0.164);
+    border-top-left-radius: 40px;
+    border-bottom-left-radius: 40px;
+    border-bottom-right-radius: 40px;
+    border-top-right-radius: 40px;
     text-align: center;
-    max-width: 60px;
+    max-width: 30px;
     box-shadow: 0px 0px 12px rgb(29, 29, 29);
-}
+};
 
 .nextUpcomingAdminMode {
     color: rgb(255, 255, 255);
@@ -146,14 +167,73 @@ export default {
     padding-left: 10px center;
     border: #fff;
     background-color: rgba(224, 31, 31, 0.911);
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    border-top-right-radius: 10px;
+    border-top-left-radius: 40px;
+    border-bottom-left-radius: 40px;
+    border-bottom-right-radius: 40px;
+    border-top-right-radius: 40px;
     text-align: center;
     max-width: 60px;
     box-shadow: 0px 0px 12px rgb(29, 29, 29);
+};
+
+.reactEmoji {
+    color: rgb(255, 255, 255);
+    position: relative;
+    left: 0%;
+    top: -54px;
+    padding-left: 10px center;
+    border: #fff;
+    background-color: rgb(59, 59, 59);
+    border-top-left-radius: 40px;
+    border-bottom-left-radius: 40px;
+    border-bottom-right-radius: 40px;
+    border-top-right-radius: 40px;
+    text-align: center;
+    width: 60px;
+    height: 25px;
+    box-shadow: 0px 0px 12px rgb(29, 29, 29);
+    cursor: pointer;
+};
+
+.reactEmojiAdmin {
+    color: rgb(255, 255, 255);
+    position: relative;
+    left: 0%;
+    top: -90px;
+    padding-left: 10px center;
+    border: #fff;
+    background-color: rgb(59, 59, 59);
+    border-top-left-radius: 40px;
+    border-bottom-left-radius: 40px;
+    border-bottom-right-radius: 40px;
+    border-top-right-radius: 40px;
+    text-align: center;
+    width: 60px;
+    height: 25px;
+    box-shadow: 0px 0px 12px rgb(29, 29, 29);
+    cursor: pointer;
 }
+
+.reactEmojiEmoji {
+    position: relative;
+    width: 5px;
+    top: -1px;
+    max-width: 5px;
+    height: 5px;
+    max-height: 5px;
+    color: rgba(255, 0, 0, 0);
+    background-color: rgba(255, 0, 0, 0);
+    left: -15px;
+};
+
+.reactEmojiCounter {
+    position: relative;
+    top: -23px;
+    left: 25px;
+    width: 30px;
+    background-color: rgba(255, 0, 0, 0);
+    user-select: none;
+};
 
 .invis {
     color: rgba(0, 0, 0, 0);

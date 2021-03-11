@@ -2,7 +2,7 @@
   <v-app :style="{ backgroundColor: '#1a1a1a' }">
     <v-app-bar app color="primary" dark>
       <div class="d-flex align-center">
-        <h2>Online órák (5.a)</h2>
+        <h2>Online órák</h2>
       </div>
     </v-app-bar>
     <v-main>
