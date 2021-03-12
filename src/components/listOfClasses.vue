@@ -56,7 +56,7 @@
 import { db } from '../firebase/db'
 import { increment } from '../firebase/db'
 
-var deffaultCollection = "5a-classes" //the working collection
+var deffaultCollection = "classes" //the working collection
 
 export default {
     data() {
@@ -88,7 +88,7 @@ export default {
         },
         isNotInConfig() {
             //true if admin mode
-            return true;
+            return false;
         },
         async setActive(id, active) {
             const ref = db.collection(deffaultCollection).doc(id);
