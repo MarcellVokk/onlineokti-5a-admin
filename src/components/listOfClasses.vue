@@ -33,13 +33,13 @@
                 </v-row>
                 <div class="clicks">{{ room.clicks }}</div>
 
-                <div class="reactEmoji" :class="{ liked: liked }" @click="reactLike(room.id, room.likes)" v-if="!isNotInConfig()">
-                    <v-icon class="reactEmojiEmoji" small color="blue">{{likedStyling}}</v-icon>
+                <div class="reactEmoji" :id="room.name" @click="reactLike(room.id, room.likes, room.name)" v-if="!isNotInConfig()">
+                    <v-icon class="reactEmojiEmoji" :id="room.name + 'Emoji'" small color="blue">mdi-thumb-up-outline</v-icon>
                     <div class="reactEmojiCounter">{{ room.likes }}</div>
                 </div>
 
-                <div class="reactEmojiAdmin" :class="{ liked: liked }" @click="reactLike(room.id, room.likes)" v-if="isNotInConfig()">
-                    <v-icon class="reactEmojiEmoji" small color="blue">{{likedStyling}}</v-icon>
+                <div class="reactEmojiAdmin" :id="room.name" @click="reactLike(room.id, room.likes)" v-if="isNotInConfig()">
+                    <v-icon class="reactEmojiEmoji" :id="room.name + 'Emoji'" small color="blue">mdi-thumb-up-outline</v-icon>
                     <div class="reactEmojiCounter">{{ room.likes }}</div>
                 </div>
 
@@ -56,7 +56,7 @@
 import { db } from '../firebase/db'
 import { increment } from '../firebase/db'
 
-var deffaultCollection = "5a-classes" //the working collection
+var deffaultCollection = "classes" //the working collection
 
 export default {
     data() {
@@ -66,8 +66,6 @@ export default {
             newLink: "",
             newTimestamp: "",
             newSerial: "",
-            liked: false,
-            likedStyling: "mdi-thumb-up-outline",
         }
     },
     methods: {
@@ -90,17 +88,19 @@ export default {
         },
         isNotInConfig() {
             //true if admin mode
-            return true;
+            return false;
         },
         async setActive(id, active) {
             const ref = db.collection(deffaultCollection).doc(id);
             await ref.update({ active: active });
         },
-        async reactLike(id, likes) {
+        async reactLike(id, likes, name) {
 
-            if(likes < 100 && !this.liked) {
-                this.liked = true;
-                this.likedStyling = "mdi-thumb-up"
+            if(likes < 100 && !document.getElementById(name).classList.contains("liked")) {
+                document.getElementById(name).classList.add("liked");
+                document.getElementById(name + 'Emoji').classList.remove("mdi-thumb-up-outline");
+                document.getElementById(name + 'Emoji').classList.add("mdi-thumb-up");
+
                 const ref = db.collection(deffaultCollection).doc(id);
                 await ref.update({ likes: increment });
             }
@@ -198,7 +198,7 @@ export default {
     height: 25px;
     box-shadow: 0px 0px 12px rgb(29, 29, 29);
     cursor: pointer;
-    transition: 0.5s;
+    transition: 0.2s;
 
     &.liked {
         background-color: #2195f328;
