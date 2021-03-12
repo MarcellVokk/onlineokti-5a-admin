@@ -33,8 +33,13 @@
                 </v-row>
                 <div class="clicks">{{ room.clicks }}</div>
 
+<<<<<<< HEAD
                 <div class="reactEmoji" :id="room.name" @click="reactLike(room.id, room.likes, room.name)" v-if="!isNotInConfig()">
                     <v-icon class="reactEmojiEmoji" :id="room.name + 'Emoji'" small color="blue">mdi-thumb-up-outline</v-icon>
+=======
+                <div class="reactEmoji" id="room.name" @click="reactLike(room.id, room.likes, room.name)" v-if="!isNotInConfig()">
+                    <v-icon class="reactEmojiEmoji" small color="blue">{{likedStyling}}</v-icon>
+>>>>>>> 89d46059b923ddea6e9c84c4cfaa739efc1db222
                     <div class="reactEmojiCounter">{{ room.likes }}</div>
                 </div>
 
@@ -94,6 +99,7 @@ export default {
             const ref = db.collection(deffaultCollection).doc(id);
             await ref.update({ active: active });
         },
+<<<<<<< HEAD
         async reactLike(id, likes, name) {
 
             if(likes < 100 && !document.getElementById(name).classList.contains("liked")) {
@@ -101,8 +107,20 @@ export default {
                 document.getElementById(name + 'Emoji').classList.remove("mdi-thumb-up-outline");
                 document.getElementById(name + 'Emoji').classList.add("mdi-thumb-up");
 
+=======
+        async reactLike(id, likes, idReal) {
+
+            if(likes < 100) {
+>>>>>>> 89d46059b923ddea6e9c84c4cfaa739efc1db222
                 const ref = db.collection(deffaultCollection).doc(id);
                 await ref.update({ likes: increment });
+            }
+            var btn = document.getElementById(idReal);
+            if(btn.classList.contains("liked")) {
+                btn.classList.remove("liked");
+            }
+            else {
+                btn.classList.add("liked");
             }
         }
     },
